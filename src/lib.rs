@@ -116,6 +116,22 @@ extern { }
 #[link(name = "gcc")]
 extern { }
 
+// On Windows, we need mozjs to show up after jsglue in the
+// link line for proper symbol resolution.
+#[cfg(target_os = "windows")]
+#[link(name = "mozjs")]
+extern { }
+
+// This assumes that windows is using system NSPR with mingw64,
+// and so we need -lplc4.dll to link with the libplc4.dll.a import
+// library.  This would need to be different with a native MSVC
+// build.
+#[cfg(target_os = "windows")]
+#[link(name = "plc4.dll")]
+#[link(name = "plds4.dll")]
+#[link(name = "nspr4.dll")]
+extern { }
+
 #[inline(always)]
 pub unsafe fn JS_ARGV(_cx: *mut JSContext, vp: *mut JSVal) -> *mut JSVal {
     vp.offset(2)
