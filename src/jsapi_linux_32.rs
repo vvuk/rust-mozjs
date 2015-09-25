@@ -379,18 +379,6 @@ pub struct JSTracer {
     pub realLocation_: *mut ::libc::c_void,
 }
 extern "C" {
-    fn _ZN8JSTracer17setTracingDetailsEPFvPS_PcjEPKvj(this: *mut JSTracer,
-                                                      printer:
-                                                          JSTraceNamePrinter,
-                                                      arg:
-                                                          *const ::libc::c_void,
-                                                      index: size_t);
-    fn _ZN8JSTracer15setTracingIndexEPKcj(this: *mut JSTracer,
-                                          name: *const ::libc::c_char,
-                                          index: size_t);
-    fn _ZN8JSTracer14setTracingNameEPKc(this: *mut JSTracer,
-                                        name: *const ::libc::c_char);
-    fn _ZN8JSTracer19clearTracingDetailsEv(this: *mut JSTracer);
     fn _ZNK8JSTracer17hasTracingDetailsEv(this: *mut JSTracer) -> bool;
     fn _ZNK8JSTracer11tracingNameEPKc(this: *mut JSTracer,
                                       fallback: *const ::libc::c_char)
@@ -404,9 +392,6 @@ extern "C" {
     fn _ZNK8JSTracer13debugPrintArgEv(this: *mut JSTracer)
      -> *const ::libc::c_void;
     fn _ZNK8JSTracer15debugPrintIndexEv(this: *mut JSTracer) -> size_t;
-    fn _ZNK8JSTracer7runtimeEv(this: *mut JSTracer) -> *mut JSRuntime;
-    fn _ZNK8JSTracer20eagerlyTraceWeakMapsEv(this: *mut JSTracer)
-     -> WeakMapTraceKind;
     fn _ZN8JSTracer16setTraceCallbackEPFvPS_PPv13JSGCTraceKindE(this:
                                                                     *mut JSTracer,
                                                                 traceCallback:
@@ -419,26 +404,6 @@ extern "C" {
      -> *mut *mut ::libc::c_void;
 }
 impl JSTracer {
-    #[inline]
-    pub unsafe fn setTracingDetails(&mut self, printer: JSTraceNamePrinter,
-                                    arg: *const ::libc::c_void,
-                                    index: size_t) {
-        _ZN8JSTracer17setTracingDetailsEPFvPS_PcjEPKvj(&mut *self, printer,
-                                                       arg, index)
-    }
-    #[inline]
-    pub unsafe fn setTracingIndex(&mut self, name: *const ::libc::c_char,
-                                  index: size_t) {
-        _ZN8JSTracer15setTracingIndexEPKcj(&mut *self, name, index)
-    }
-    #[inline]
-    pub unsafe fn setTracingName(&mut self, name: *const ::libc::c_char) {
-        _ZN8JSTracer14setTracingNameEPKc(&mut *self, name)
-    }
-    #[inline]
-    pub unsafe fn clearTracingDetails(&mut self) {
-        _ZN8JSTracer19clearTracingDetailsEv(&mut *self)
-    }
     #[inline]
     pub unsafe fn hasTracingDetails(&mut self) -> bool {
         _ZNK8JSTracer17hasTracingDetailsEv(&mut *self)
@@ -465,14 +430,6 @@ impl JSTracer {
     #[inline]
     pub unsafe fn debugPrintIndex(&mut self) -> size_t {
         _ZNK8JSTracer15debugPrintIndexEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn runtime(&mut self) -> *mut JSRuntime {
-        _ZNK8JSTracer7runtimeEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn eagerlyTraceWeakMaps(&mut self) -> WeakMapTraceKind {
-        _ZNK8JSTracer20eagerlyTraceWeakMapsEv(&mut *self)
     }
     #[inline]
     pub unsafe fn setTraceCallback(&mut self,
@@ -507,96 +464,6 @@ pub struct Zone {
 #[derive(Copy, Clone)]
 pub struct GCCellPtr {
     pub ptr: uintptr_t,
-}
-extern "C" {
-    fn _ZN2JS9GCCellPtr7NullPtrEv() -> GCCellPtr;
-    fn _ZNK2JS9GCCellPtr4kindEv(this: *mut GCCellPtr) -> JSGCTraceKind;
-    fn _ZNK2JS9GCCellPtr8isObjectEv(this: *mut GCCellPtr) -> bool;
-    fn _ZNK2JS9GCCellPtr8isScriptEv(this: *mut GCCellPtr) -> bool;
-    fn _ZNK2JS9GCCellPtr8isStringEv(this: *mut GCCellPtr) -> bool;
-    fn _ZNK2JS9GCCellPtr8isSymbolEv(this: *mut GCCellPtr) -> bool;
-    fn _ZNK2JS9GCCellPtr7isShapeEv(this: *mut GCCellPtr) -> bool;
-    fn _ZNK2JS9GCCellPtr8toObjectEv(this: *mut GCCellPtr) -> *mut JSObject;
-    fn _ZNK2JS9GCCellPtr8toStringEv(this: *mut GCCellPtr) -> *mut JSString;
-    fn _ZNK2JS9GCCellPtr8toScriptEv(this: *mut GCCellPtr) -> *mut JSScript;
-    fn _ZNK2JS9GCCellPtr8toSymbolEv(this: *mut GCCellPtr) -> *mut Symbol;
-    fn _ZNK2JS9GCCellPtr6asCellEv(this: *mut GCCellPtr) -> *mut Cell;
-    fn _ZNK2JS9GCCellPtr15unsafeAsIntegerEv(this: *mut GCCellPtr) -> u64;
-    fn _ZNK2JS9GCCellPtr15unsafeAsUIntPtrEv(this: *mut GCCellPtr)
-     -> uintptr_t;
-    fn _ZN2JS9GCCellPtr11checkedCastEPv13JSGCTraceKind(this: *mut GCCellPtr,
-                                                       p: *mut ::libc::c_void,
-                                                       traceKind:
-                                                           JSGCTraceKind)
-     -> uintptr_t;
-    fn _ZNK2JS9GCCellPtr13outOfLineKindEv(this: *mut GCCellPtr)
-     -> JSGCTraceKind;
-}
-impl GCCellPtr {
-    #[inline]
-    pub unsafe fn NullPtr() -> GCCellPtr { _ZN2JS9GCCellPtr7NullPtrEv() }
-    #[inline]
-    pub unsafe fn kind(&mut self) -> JSGCTraceKind {
-        _ZNK2JS9GCCellPtr4kindEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn isObject(&mut self) -> bool {
-        _ZNK2JS9GCCellPtr8isObjectEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn isScript(&mut self) -> bool {
-        _ZNK2JS9GCCellPtr8isScriptEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn isString(&mut self) -> bool {
-        _ZNK2JS9GCCellPtr8isStringEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn isSymbol(&mut self) -> bool {
-        _ZNK2JS9GCCellPtr8isSymbolEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn isShape(&mut self) -> bool {
-        _ZNK2JS9GCCellPtr7isShapeEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn toObject(&mut self) -> *mut JSObject {
-        _ZNK2JS9GCCellPtr8toObjectEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn toString(&mut self) -> *mut JSString {
-        _ZNK2JS9GCCellPtr8toStringEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn toScript(&mut self) -> *mut JSScript {
-        _ZNK2JS9GCCellPtr8toScriptEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn toSymbol(&mut self) -> *mut Symbol {
-        _ZNK2JS9GCCellPtr8toSymbolEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn asCell(&mut self) -> *mut Cell {
-        _ZNK2JS9GCCellPtr6asCellEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn unsafeAsInteger(&mut self) -> u64 {
-        _ZNK2JS9GCCellPtr15unsafeAsIntegerEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn unsafeAsUIntPtr(&mut self) -> uintptr_t {
-        _ZNK2JS9GCCellPtr15unsafeAsUIntPtrEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn checkedCast(&mut self, p: *mut ::libc::c_void,
-                              traceKind: JSGCTraceKind) -> uintptr_t {
-        _ZN2JS9GCCellPtr11checkedCastEPv13JSGCTraceKind(&mut *self, p,
-                                                        traceKind)
-    }
-    #[inline]
-    pub unsafe fn outOfLineKind(&mut self) -> JSGCTraceKind {
-        _ZNK2JS9GCCellPtr13outOfLineKindEv(&mut *self)
-    }
 }
 pub enum GCRuntime { }
 #[repr(i32)]
@@ -717,31 +584,9 @@ pub struct AutoDisableGenerationalGC {
 }
 #[repr(C)]
 pub struct AutoAssertOnGC;
-extern "C" {
-    fn _ZN2JS14AutoAssertOnGC16VerifyIsSafeToGCEP9JSRuntime(rt:
-                                                                *mut JSRuntime);
-}
-impl AutoAssertOnGC {
-    #[inline]
-    pub unsafe fn VerifyIsSafeToGC(rt: *mut JSRuntime) {
-        _ZN2JS14AutoAssertOnGC16VerifyIsSafeToGCEP9JSRuntime(rt)
-    }
-}
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct AutoAssertNoAlloc;
-extern "C" {
-    fn _ZN2JS17AutoAssertNoAlloc13disallowAllocEP9JSRuntime(this:
-                                                                *mut AutoAssertNoAlloc,
-                                                            rt:
-                                                                *mut JSRuntime);
-}
-impl AutoAssertNoAlloc {
-    #[inline]
-    pub unsafe fn disallowAlloc(&mut self, rt: *mut JSRuntime) {
-        _ZN2JS17AutoAssertNoAlloc13disallowAllocEP9JSRuntime(&mut *self, rt)
-    }
-}
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct AutoSuppressGCAnalysis {
@@ -851,35 +696,12 @@ pub struct ObjectPtr {
     pub value: Heap<*mut JSObject>,
 }
 extern "C" {
-    fn _ZN2JS9ObjectPtr8finalizeEP9JSRuntime(this: *mut ObjectPtr,
-                                             rt: *mut JSRuntime);
-    fn _ZN2JS9ObjectPtr4initEP8JSObject(this: *mut ObjectPtr,
-                                        obj: *mut JSObject);
-    fn _ZNK2JS9ObjectPtr3getEv(this: *mut ObjectPtr) -> *mut JSObject;
-    fn _ZN2JS9ObjectPtr15writeBarrierPreEP9JSRuntime(this: *mut ObjectPtr,
-                                                     rt: *mut JSRuntime);
     fn _ZN2JS9ObjectPtr24updateWeakPointerAfterGCEv(this: *mut ObjectPtr);
     fn _ZN2JS9ObjectPtr5traceEP8JSTracerPKc(this: *mut ObjectPtr,
                                             trc: *mut JSTracer,
                                             name: *const ::libc::c_char);
 }
 impl ObjectPtr {
-    #[inline]
-    pub unsafe fn finalize(&mut self, rt: *mut JSRuntime) {
-        _ZN2JS9ObjectPtr8finalizeEP9JSRuntime(&mut *self, rt)
-    }
-    #[inline]
-    pub unsafe fn init(&mut self, obj: *mut JSObject) {
-        _ZN2JS9ObjectPtr4initEP8JSObject(&mut *self, obj)
-    }
-    #[inline]
-    pub unsafe fn get(&mut self) -> *mut JSObject {
-        _ZNK2JS9ObjectPtr3getEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn writeBarrierPre(&mut self, rt: *mut JSRuntime) {
-        _ZN2JS9ObjectPtr15writeBarrierPreEP9JSRuntime(&mut *self, rt)
-    }
     #[inline]
     pub unsafe fn updateWeakPointerAfterGC(&mut self) {
         _ZN2JS9ObjectPtr24updateWeakPointerAfterGCEv(&mut *self)
@@ -1315,8 +1137,6 @@ pub struct ElementAdder {
 #[derive(Copy, Clone)]
 pub enum GetBehavior { CheckHasElemPreserveHoles = 0, GetElement = 1, }
 extern "C" {
-    fn _ZNK2js12ElementAdder11getBehaviorEv(this: *mut ElementAdder)
-     -> GetBehavior;
     fn _ZN2js12ElementAdder6appendEP9JSContextN2JS6HandleINS3_5ValueEEE(this:
                                                                             *mut ElementAdder,
                                                                         cx:
@@ -1326,10 +1146,6 @@ extern "C" {
     fn _ZN2js12ElementAdder10appendHoleEv(this: *mut ElementAdder);
 }
 impl ElementAdder {
-    #[inline]
-    pub unsafe fn getBehavior(&mut self) -> GetBehavior {
-        _ZNK2js12ElementAdder11getBehaviorEv(&mut *self)
-    }
     #[inline]
     pub unsafe fn append(&mut self, cx: *mut JSContext, v: HandleValue) {
         _ZN2js12ElementAdder6appendEP9JSContextN2JS6HandleINS3_5ValueEEE(&mut *self,
@@ -1707,166 +1523,6 @@ impl RuntimeOptions {
         0 | ((varObjFix_ as u8) << 0u32)
     }
 }
-extern "C" {
-    fn _ZNK2JS14RuntimeOptions8baselineEv(this: *mut RuntimeOptions) -> bool;
-    fn _ZN2JS14RuntimeOptions11setBaselineEb(this: *mut RuntimeOptions,
-                                             flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions14toggleBaselineEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions3ionEv(this: *mut RuntimeOptions) -> bool;
-    fn _ZN2JS14RuntimeOptions6setIonEb(this: *mut RuntimeOptions, flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions9toggleIonEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions5asmJSEv(this: *mut RuntimeOptions) -> bool;
-    fn _ZN2JS14RuntimeOptions8setAsmJSEb(this: *mut RuntimeOptions,
-                                         flag: bool) -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions11toggleAsmJSEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions12nativeRegExpEv(this: *mut RuntimeOptions)
-     -> bool;
-    fn _ZN2JS14RuntimeOptions15setNativeRegExpEb(this: *mut RuntimeOptions,
-                                                 flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions14unboxedObjectsEv(this: *mut RuntimeOptions)
-     -> bool;
-    fn _ZN2JS14RuntimeOptions17setUnboxedObjectsEb(this: *mut RuntimeOptions,
-                                                   flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions6werrorEv(this: *mut RuntimeOptions) -> bool;
-    fn _ZN2JS14RuntimeOptions9setWerrorEb(this: *mut RuntimeOptions,
-                                          flag: bool) -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions12toggleWerrorEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions10strictModeEv(this: *mut RuntimeOptions)
-     -> bool;
-    fn _ZN2JS14RuntimeOptions13setStrictModeEb(this: *mut RuntimeOptions,
-                                               flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions16toggleStrictModeEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions13extraWarningsEv(this: *mut RuntimeOptions)
-     -> bool;
-    fn _ZN2JS14RuntimeOptions16setExtraWarningsEb(this: *mut RuntimeOptions,
-                                                  flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions19toggleExtraWarningsEv(this:
-                                                         *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-    fn _ZNK2JS14RuntimeOptions9varObjFixEv(this: *mut RuntimeOptions) -> bool;
-    fn _ZN2JS14RuntimeOptions12setVarObjFixEb(this: *mut RuntimeOptions,
-                                              flag: bool)
-     -> *mut RuntimeOptions;
-    fn _ZN2JS14RuntimeOptions15toggleVarObjFixEv(this: *mut RuntimeOptions)
-     -> *mut RuntimeOptions;
-}
-impl RuntimeOptions {
-    #[inline]
-    pub unsafe fn baseline(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions8baselineEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setBaseline(&mut self, flag: bool) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions11setBaselineEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleBaseline(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions14toggleBaselineEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn ion(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions3ionEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setIon(&mut self, flag: bool) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions6setIonEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleIon(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions9toggleIonEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn asmJS(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions5asmJSEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setAsmJS(&mut self, flag: bool) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions8setAsmJSEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleAsmJS(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions11toggleAsmJSEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn nativeRegExp(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions12nativeRegExpEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setNativeRegExp(&mut self, flag: bool)
-     -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions15setNativeRegExpEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn unboxedObjects(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions14unboxedObjectsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setUnboxedObjects(&mut self, flag: bool)
-     -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions17setUnboxedObjectsEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn werror(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions6werrorEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setWerror(&mut self, flag: bool) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions9setWerrorEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleWerror(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions12toggleWerrorEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn strictMode(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions10strictModeEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setStrictMode(&mut self, flag: bool)
-     -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions13setStrictModeEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleStrictMode(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions16toggleStrictModeEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn extraWarnings(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions13extraWarningsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setExtraWarnings(&mut self, flag: bool)
-     -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions16setExtraWarningsEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleExtraWarnings(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions19toggleExtraWarningsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn varObjFix(&mut self) -> bool {
-        _ZNK2JS14RuntimeOptions9varObjFixEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setVarObjFix(&mut self, flag: bool) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions12setVarObjFixEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleVarObjFix(&mut self) -> *mut RuntimeOptions {
-        _ZN2JS14RuntimeOptions15toggleVarObjFixEv(&mut *self)
-    }
-}
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct ContextOptions {
@@ -1891,82 +1547,6 @@ impl ContextOptions {
         0 | ((privateIsNSISupports_ as u8) << 0u32) |
             ((dontReportUncaught_ as u8) << 1u32) |
             ((autoJSAPIOwnsErrorReporting_ as u8) << 2u32)
-    }
-}
-extern "C" {
-    fn _ZNK2JS14ContextOptions20privateIsNSISupportsEv(this:
-                                                           *mut ContextOptions)
-     -> bool;
-    fn _ZN2JS14ContextOptions23setPrivateIsNSISupportsEb(this:
-                                                             *mut ContextOptions,
-                                                         flag: bool)
-     -> *mut ContextOptions;
-    fn _ZN2JS14ContextOptions26togglePrivateIsNSISupportsEv(this:
-                                                                *mut ContextOptions)
-     -> *mut ContextOptions;
-    fn _ZNK2JS14ContextOptions18dontReportUncaughtEv(this:
-                                                         *mut ContextOptions)
-     -> bool;
-    fn _ZN2JS14ContextOptions21setDontReportUncaughtEb(this:
-                                                           *mut ContextOptions,
-                                                       flag: bool)
-     -> *mut ContextOptions;
-    fn _ZN2JS14ContextOptions24toggleDontReportUncaughtEv(this:
-                                                              *mut ContextOptions)
-     -> *mut ContextOptions;
-    fn _ZNK2JS14ContextOptions27autoJSAPIOwnsErrorReportingEv(this:
-                                                                  *mut ContextOptions)
-     -> bool;
-    fn _ZN2JS14ContextOptions30setAutoJSAPIOwnsErrorReportingEb(this:
-                                                                    *mut ContextOptions,
-                                                                flag: bool)
-     -> *mut ContextOptions;
-    fn _ZN2JS14ContextOptions33toggleAutoJSAPIOwnsErrorReportingEv(this:
-                                                                       *mut ContextOptions)
-     -> *mut ContextOptions;
-}
-impl ContextOptions {
-    #[inline]
-    pub unsafe fn privateIsNSISupports(&mut self) -> bool {
-        _ZNK2JS14ContextOptions20privateIsNSISupportsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setPrivateIsNSISupports(&mut self, flag: bool)
-     -> *mut ContextOptions {
-        _ZN2JS14ContextOptions23setPrivateIsNSISupportsEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn togglePrivateIsNSISupports(&mut self)
-     -> *mut ContextOptions {
-        _ZN2JS14ContextOptions26togglePrivateIsNSISupportsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn dontReportUncaught(&mut self) -> bool {
-        _ZNK2JS14ContextOptions18dontReportUncaughtEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setDontReportUncaught(&mut self, flag: bool)
-     -> *mut ContextOptions {
-        _ZN2JS14ContextOptions21setDontReportUncaughtEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn toggleDontReportUncaught(&mut self) -> *mut ContextOptions {
-        _ZN2JS14ContextOptions24toggleDontReportUncaughtEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn autoJSAPIOwnsErrorReporting(&mut self) -> bool {
-        _ZNK2JS14ContextOptions27autoJSAPIOwnsErrorReportingEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setAutoJSAPIOwnsErrorReporting(&mut self, flag: bool)
-     -> *mut ContextOptions {
-        _ZN2JS14ContextOptions30setAutoJSAPIOwnsErrorReportingEb(&mut *self,
-                                                                 flag)
-    }
-    #[inline]
-    pub unsafe fn toggleAutoJSAPIOwnsErrorReporting(&mut self)
-     -> *mut ContextOptions {
-        _ZN2JS14ContextOptions33toggleAutoJSAPIOwnsErrorReportingEv(&mut *self)
     }
 }
 #[repr(C)]
@@ -2091,39 +1671,6 @@ impl jsapi_h_unnamed_3 {
     }
 }
 extern "C" {
-    fn _ZNK2JS18CompartmentOptions7versionEv(this: *mut CompartmentOptions)
-     -> JSVersion;
-    fn _ZN2JS18CompartmentOptions10setVersionE9JSVersion(this:
-                                                             *mut CompartmentOptions,
-                                                         aVersion: JSVersion)
-     -> *mut CompartmentOptions;
-    fn _ZNK2JS18CompartmentOptions19invisibleToDebuggerEv(this:
-                                                              *mut CompartmentOptions)
-     -> bool;
-    fn _ZN2JS18CompartmentOptions22setInvisibleToDebuggerEb(this:
-                                                                *mut CompartmentOptions,
-                                                            flag: bool)
-     -> *mut CompartmentOptions;
-    fn _ZNK2JS18CompartmentOptions9mergeableEv(this: *mut CompartmentOptions)
-     -> bool;
-    fn _ZN2JS18CompartmentOptions12setMergeableEb(this:
-                                                      *mut CompartmentOptions,
-                                                  flag: bool)
-     -> *mut CompartmentOptions;
-    fn _ZNK2JS18CompartmentOptions13discardSourceEv(this:
-                                                        *mut CompartmentOptions)
-     -> bool;
-    fn _ZN2JS18CompartmentOptions16setDiscardSourceEb(this:
-                                                          *mut CompartmentOptions,
-                                                      flag: bool)
-     -> *mut CompartmentOptions;
-    fn _ZNK2JS18CompartmentOptions15cloneSingletonsEv(this:
-                                                          *mut CompartmentOptions)
-     -> bool;
-    fn _ZN2JS18CompartmentOptions18setCloneSingletonsEb(this:
-                                                            *mut CompartmentOptions,
-                                                        flag: bool)
-     -> *mut CompartmentOptions;
     fn _ZNK2JS18CompartmentOptions13extraWarningsEP9JSRuntime(this:
                                                                   *mut CompartmentOptions,
                                                               rt:
@@ -2134,15 +1681,6 @@ extern "C" {
                                                               cx:
                                                                   *mut JSContext)
      -> bool;
-    fn _ZN2JS18CompartmentOptions21extraWarningsOverrideEv(this:
-                                                               *mut CompartmentOptions)
-     -> *mut Override;
-    fn _ZNK2JS18CompartmentOptions11zonePointerEv(this:
-                                                      *mut CompartmentOptions)
-     -> *mut ::libc::c_void;
-    fn _ZNK2JS18CompartmentOptions13zoneSpecifierEv(this:
-                                                        *mut CompartmentOptions)
-     -> ZoneSpecifier;
     fn _ZN2JS18CompartmentOptions7setZoneENS_13ZoneSpecifierE(this:
                                                                   *mut CompartmentOptions,
                                                               spec:
@@ -2153,80 +1691,8 @@ extern "C" {
                                                             obj:
                                                                 *mut JSObject)
      -> *mut CompartmentOptions;
-    fn _ZN2JS18CompartmentOptions21setSingletonsAsValuesEv(this:
-                                                               *mut CompartmentOptions);
-    fn _ZNK2JS18CompartmentOptions24getSingletonsAsTemplatesEv(this:
-                                                                   *mut CompartmentOptions)
-     -> bool;
-    fn _ZNK2JS18CompartmentOptions13addonIdOrNullEv(this:
-                                                        *mut CompartmentOptions)
-     -> *mut JSAddonId;
-    fn _ZN2JS18CompartmentOptions10setAddonIdEP9JSAddonId(this:
-                                                              *mut CompartmentOptions,
-                                                          id: *mut JSAddonId)
-     -> *mut CompartmentOptions;
-    fn _ZN2JS18CompartmentOptions8setTraceEPFvP8JSTracerP8JSObjectE(this:
-                                                                        *mut CompartmentOptions,
-                                                                    op:
-                                                                        JSTraceOp)
-     -> *mut CompartmentOptions;
-    fn _ZNK2JS18CompartmentOptions8getTraceEv(this: *mut CompartmentOptions)
-     -> JSTraceOp;
-    fn _ZNK2JS18CompartmentOptions15preserveJitCodeEv(this:
-                                                          *mut CompartmentOptions)
-     -> bool;
-    fn _ZN2JS18CompartmentOptions18setPreserveJitCodeEb(this:
-                                                            *mut CompartmentOptions,
-                                                        flag: bool)
-     -> *mut CompartmentOptions;
 }
 impl CompartmentOptions {
-    #[inline]
-    pub unsafe fn version(&mut self) -> JSVersion {
-        _ZNK2JS18CompartmentOptions7versionEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setVersion(&mut self, aVersion: JSVersion)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions10setVersionE9JSVersion(&mut *self,
-                                                          aVersion)
-    }
-    #[inline]
-    pub unsafe fn invisibleToDebugger(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions19invisibleToDebuggerEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setInvisibleToDebugger(&mut self, flag: bool)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions22setInvisibleToDebuggerEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn mergeable(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions9mergeableEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setMergeable(&mut self, flag: bool)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions12setMergeableEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn discardSource(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions13discardSourceEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setDiscardSource(&mut self, flag: bool)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions16setDiscardSourceEb(&mut *self, flag)
-    }
-    #[inline]
-    pub unsafe fn cloneSingletons(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions15cloneSingletonsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setCloneSingletons(&mut self, flag: bool)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions18setCloneSingletonsEb(&mut *self, flag)
-    }
     #[inline]
     pub unsafe fn extraWarnings(&mut self, rt: *mut JSRuntime) -> bool {
         _ZNK2JS18CompartmentOptions13extraWarningsEP9JSRuntime(&mut *self, rt)
@@ -2234,18 +1700,6 @@ impl CompartmentOptions {
     #[inline]
     pub unsafe fn extraWarnings1(&mut self, cx: *mut JSContext) -> bool {
         _ZNK2JS18CompartmentOptions13extraWarningsEP9JSContext(&mut *self, cx)
-    }
-    #[inline]
-    pub unsafe fn extraWarningsOverride(&mut self) -> *mut Override {
-        _ZN2JS18CompartmentOptions21extraWarningsOverrideEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn zonePointer(&mut self) -> *mut ::libc::c_void {
-        _ZNK2JS18CompartmentOptions11zonePointerEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn zoneSpecifier(&mut self) -> ZoneSpecifier {
-        _ZNK2JS18CompartmentOptions13zoneSpecifierEv(&mut *self)
     }
     #[inline]
     pub unsafe fn setZone(&mut self, spec: ZoneSpecifier)
@@ -2257,42 +1711,6 @@ impl CompartmentOptions {
     pub unsafe fn setSameZoneAs(&mut self, obj: *mut JSObject)
      -> *mut CompartmentOptions {
         _ZN2JS18CompartmentOptions13setSameZoneAsEP8JSObject(&mut *self, obj)
-    }
-    #[inline]
-    pub unsafe fn setSingletonsAsValues(&mut self) {
-        _ZN2JS18CompartmentOptions21setSingletonsAsValuesEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn getSingletonsAsTemplates(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions24getSingletonsAsTemplatesEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn addonIdOrNull(&mut self) -> *mut JSAddonId {
-        _ZNK2JS18CompartmentOptions13addonIdOrNullEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setAddonId(&mut self, id: *mut JSAddonId)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions10setAddonIdEP9JSAddonId(&mut *self, id)
-    }
-    #[inline]
-    pub unsafe fn setTrace(&mut self, op: JSTraceOp)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions8setTraceEPFvP8JSTracerP8JSObjectE(&mut *self,
-                                                                     op)
-    }
-    #[inline]
-    pub unsafe fn getTrace(&mut self) -> JSTraceOp {
-        _ZNK2JS18CompartmentOptions8getTraceEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn preserveJitCode(&mut self) -> bool {
-        _ZNK2JS18CompartmentOptions15preserveJitCodeEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn setPreserveJitCode(&mut self, flag: bool)
-     -> *mut CompartmentOptions {
-        _ZN2JS18CompartmentOptions18setPreserveJitCodeEb(&mut *self, flag)
     }
 }
 #[repr(i32)]
@@ -2372,40 +1790,12 @@ extern "C" {
                                                                 *mut ReadOnlyCompileOptions,
                                                             rhs:
                                                                 *const ReadOnlyCompileOptions);
-    fn _ZNK2JS22ReadOnlyCompileOptions11mutedErrorsEv(this:
-                                                          *mut ReadOnlyCompileOptions)
-     -> bool;
-    fn _ZNK2JS22ReadOnlyCompileOptions8filenameEv(this:
-                                                      *mut ReadOnlyCompileOptions)
-     -> *const ::libc::c_char;
-    fn _ZNK2JS22ReadOnlyCompileOptions18introducerFilenameEv(this:
-                                                                 *mut ReadOnlyCompileOptions)
-     -> *const ::libc::c_char;
-    fn _ZNK2JS22ReadOnlyCompileOptions12sourceMapURLEv(this:
-                                                           *mut ReadOnlyCompileOptions)
-     -> *const u16;
 }
 impl ReadOnlyCompileOptions {
     #[inline]
     pub unsafe fn copyPODOptions(&mut self,
                                  rhs: *const ReadOnlyCompileOptions) {
         _ZN2JS22ReadOnlyCompileOptions14copyPODOptionsERKS0_(&mut *self, rhs)
-    }
-    #[inline]
-    pub unsafe fn mutedErrors(&mut self) -> bool {
-        _ZNK2JS22ReadOnlyCompileOptions11mutedErrorsEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn filename(&mut self) -> *const ::libc::c_char {
-        _ZNK2JS22ReadOnlyCompileOptions8filenameEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn introducerFilename(&mut self) -> *const ::libc::c_char {
-        _ZNK2JS22ReadOnlyCompileOptions18introducerFilenameEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn sourceMapURL(&mut self) -> *const u16 {
-        _ZNK2JS22ReadOnlyCompileOptions12sourceMapURLEv(&mut *self)
     }
 }
 #[repr(C)]
@@ -2415,10 +1805,6 @@ pub struct OwningCompileOptions {
     pub elementRoot: PersistentRootedObject,
     pub elementAttributeNameRoot: PersistentRootedString,
     pub introductionScriptRoot: PersistentRootedScript,
-}
-#[repr(C)]
-pub struct _vftable_OwningCompileOptions {
-    pub _base: _vftable_ReadOnlyCompileOptions,
 }
 extern "C" {
     fn _ZN2JS20OwningCompileOptions4copyEP9JSContextRKNS_22ReadOnlyCompileOptionsE(this:
@@ -2456,86 +1842,6 @@ extern "C" {
                                                                           s:
                                                                               *const ::libc::c_char)
      -> bool;
-    fn _ZN2JS20OwningCompileOptions7setLineEj(this: *mut OwningCompileOptions,
-                                              l: u32)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions10setElementEP8JSObject(this:
-                                                               *mut OwningCompileOptions,
-                                                           e: *mut JSObject)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions23setElementAttributeNameEP8JSString(this:
-                                                                            *mut OwningCompileOptions,
-                                                                        p:
-                                                                            *mut JSString)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions21setIntroductionScriptEP8JSScript(this:
-                                                                          *mut OwningCompileOptions,
-                                                                      s:
-                                                                          *mut JSScript)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions14setMutedErrorsEb(this:
-                                                          *mut OwningCompileOptions,
-                                                      mute: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions10setVersionE9JSVersion(this:
-                                                               *mut OwningCompileOptions,
-                                                           v: JSVersion)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions7setUTF8Eb(this: *mut OwningCompileOptions,
-                                              u: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions9setColumnEj(this:
-                                                    *mut OwningCompileOptions,
-                                                c: u32)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions15setCompileAndGoEb(this:
-                                                           *mut OwningCompileOptions,
-                                                       cng: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions19setHasPollutedScopeEb(this:
-                                                               *mut OwningCompileOptions,
-                                                           p: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions10setForEvalEb(this:
-                                                      *mut OwningCompileOptions,
-                                                  eval: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions15setNoScriptRvalEb(this:
-                                                           *mut OwningCompileOptions,
-                                                       nsr: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions18setSelfHostingModeEb(this:
-                                                              *mut OwningCompileOptions,
-                                                          shm: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions17setCanLazilyParseEb(this:
-                                                             *mut OwningCompileOptions,
-                                                         clp: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions15setSourceIsLazyEb(this:
-                                                           *mut OwningCompileOptions,
-                                                       l: bool)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions19setIntroductionTypeEPKc(this:
-                                                                 *mut OwningCompileOptions,
-                                                             t:
-                                                                 *const ::libc::c_char)
-     -> *mut OwningCompileOptions;
-    fn _ZN2JS20OwningCompileOptions19setIntroductionInfoEP9JSContextPKcS4_jP8JSScriptj(this:
-                                                                                           *mut OwningCompileOptions,
-                                                                                       cx:
-                                                                                           *mut JSContext,
-                                                                                       introducerFn:
-                                                                                           *const ::libc::c_char,
-                                                                                       intro:
-                                                                                           *const ::libc::c_char,
-                                                                                       line:
-                                                                                           u32,
-                                                                                       script:
-                                                                                           *mut JSScript,
-                                                                                       offset:
-                                                                                           u32)
-     -> bool;
 }
 impl OwningCompileOptions {
     #[inline]
@@ -2569,99 +1875,6 @@ impl OwningCompileOptions {
                                                                            cx,
                                                                            s)
     }
-    #[inline]
-    pub unsafe fn setLine(&mut self, l: u32) -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions7setLineEj(&mut *self, l)
-    }
-    #[inline]
-    pub unsafe fn setElement(&mut self, e: *mut JSObject)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions10setElementEP8JSObject(&mut *self, e)
-    }
-    #[inline]
-    pub unsafe fn setElementAttributeName(&mut self, p: *mut JSString)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions23setElementAttributeNameEP8JSString(&mut *self,
-                                                                         p)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionScript(&mut self, s: *mut JSScript)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions21setIntroductionScriptEP8JSScript(&mut *self,
-                                                                       s)
-    }
-    #[inline]
-    pub unsafe fn setMutedErrors(&mut self, mute: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions14setMutedErrorsEb(&mut *self, mute)
-    }
-    #[inline]
-    pub unsafe fn setVersion(&mut self, v: JSVersion)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions10setVersionE9JSVersion(&mut *self, v)
-    }
-    #[inline]
-    pub unsafe fn setUTF8(&mut self, u: bool) -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions7setUTF8Eb(&mut *self, u)
-    }
-    #[inline]
-    pub unsafe fn setColumn(&mut self, c: u32) -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions9setColumnEj(&mut *self, c)
-    }
-    #[inline]
-    pub unsafe fn setCompileAndGo(&mut self, cng: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions15setCompileAndGoEb(&mut *self, cng)
-    }
-    #[inline]
-    pub unsafe fn setHasPollutedScope(&mut self, p: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions19setHasPollutedScopeEb(&mut *self, p)
-    }
-    #[inline]
-    pub unsafe fn setForEval(&mut self, eval: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions10setForEvalEb(&mut *self, eval)
-    }
-    #[inline]
-    pub unsafe fn setNoScriptRval(&mut self, nsr: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions15setNoScriptRvalEb(&mut *self, nsr)
-    }
-    #[inline]
-    pub unsafe fn setSelfHostingMode(&mut self, shm: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions18setSelfHostingModeEb(&mut *self, shm)
-    }
-    #[inline]
-    pub unsafe fn setCanLazilyParse(&mut self, clp: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions17setCanLazilyParseEb(&mut *self, clp)
-    }
-    #[inline]
-    pub unsafe fn setSourceIsLazy(&mut self, l: bool)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions15setSourceIsLazyEb(&mut *self, l)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionType(&mut self, t: *const ::libc::c_char)
-     -> *mut OwningCompileOptions {
-        _ZN2JS20OwningCompileOptions19setIntroductionTypeEPKc(&mut *self, t)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionInfo(&mut self, cx: *mut JSContext,
-                                      introducerFn: *const ::libc::c_char,
-                                      intro: *const ::libc::c_char, line: u32,
-                                      script: *mut JSScript, offset: u32)
-     -> bool {
-        _ZN2JS20OwningCompileOptions19setIntroductionInfoEP9JSContextPKcS4_jP8JSScriptj(&mut *self,
-                                                                                        cx,
-                                                                                        introducerFn,
-                                                                                        intro,
-                                                                                        line,
-                                                                                        script,
-                                                                                        offset)
-    }
 }
 #[repr(C)]
 pub struct CompileOptions {
@@ -2669,204 +1882,6 @@ pub struct CompileOptions {
     pub elementRoot: RootedObject,
     pub elementAttributeNameRoot: RootedString,
     pub introductionScriptRoot: RootedScript,
-}
-#[repr(C)]
-pub struct _vftable_CompileOptions {
-    pub _base: _vftable_ReadOnlyCompileOptions,
-}
-extern "C" {
-    fn _ZN2JS14CompileOptions7setFileEPKc(this: *mut CompileOptions,
-                                          f: *const ::libc::c_char)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions7setLineEj(this: *mut CompileOptions, l: u32)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions14setFileAndLineEPKcj(this: *mut CompileOptions,
-                                                   f: *const ::libc::c_char,
-                                                   l: u32)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions15setSourceMapURLEPKDs(this: *mut CompileOptions,
-                                                    s: *const u16)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions10setElementEP8JSObject(this:
-                                                         *mut CompileOptions,
-                                                     e: *mut JSObject)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions23setElementAttributeNameEP8JSString(this:
-                                                                      *mut CompileOptions,
-                                                                  p:
-                                                                      *mut JSString)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions21setIntroductionScriptEP8JSScript(this:
-                                                                    *mut CompileOptions,
-                                                                s:
-                                                                    *mut JSScript)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions14setMutedErrorsEb(this: *mut CompileOptions,
-                                                mute: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions10setVersionE9JSVersion(this:
-                                                         *mut CompileOptions,
-                                                     v: JSVersion)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions7setUTF8Eb(this: *mut CompileOptions, u: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions9setColumnEj(this: *mut CompileOptions, c: u32)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions15setCompileAndGoEb(this: *mut CompileOptions,
-                                                 cng: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions19setHasPollutedScopeEb(this:
-                                                         *mut CompileOptions,
-                                                     p: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions10setForEvalEb(this: *mut CompileOptions,
-                                            eval: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions15setNoScriptRvalEb(this: *mut CompileOptions,
-                                                 nsr: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions18setSelfHostingModeEb(this: *mut CompileOptions,
-                                                    shm: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions17setCanLazilyParseEb(this: *mut CompileOptions,
-                                                   clp: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions15setSourceIsLazyEb(this: *mut CompileOptions,
-                                                 l: bool)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions19setIntroductionTypeEPKc(this:
-                                                           *mut CompileOptions,
-                                                       t:
-                                                           *const ::libc::c_char)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions19setIntroductionInfoEPKcS2_jP8JSScriptj(this:
-                                                                          *mut CompileOptions,
-                                                                      introducerFn:
-                                                                          *const ::libc::c_char,
-                                                                      intro:
-                                                                          *const ::libc::c_char,
-                                                                      line:
-                                                                          u32,
-                                                                      script:
-                                                                          *mut JSScript,
-                                                                      offset:
-                                                                          u32)
-     -> *mut CompileOptions;
-    fn _ZN2JS14CompileOptions19maybeMakeStrictModeEb(this:
-                                                         *mut CompileOptions,
-                                                     strict: bool)
-     -> *mut CompileOptions;
-}
-impl CompileOptions {
-    #[inline]
-    pub unsafe fn setFile(&mut self, f: *const ::libc::c_char)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions7setFileEPKc(&mut *self, f)
-    }
-    #[inline]
-    pub unsafe fn setLine(&mut self, l: u32) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions7setLineEj(&mut *self, l)
-    }
-    #[inline]
-    pub unsafe fn setFileAndLine(&mut self, f: *const ::libc::c_char, l: u32)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions14setFileAndLineEPKcj(&mut *self, f, l)
-    }
-    #[inline]
-    pub unsafe fn setSourceMapURL(&mut self, s: *const u16)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions15setSourceMapURLEPKDs(&mut *self, s)
-    }
-    #[inline]
-    pub unsafe fn setElement(&mut self, e: *mut JSObject)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions10setElementEP8JSObject(&mut *self, e)
-    }
-    #[inline]
-    pub unsafe fn setElementAttributeName(&mut self, p: *mut JSString)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions23setElementAttributeNameEP8JSString(&mut *self,
-                                                                   p)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionScript(&mut self, s: *mut JSScript)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions21setIntroductionScriptEP8JSScript(&mut *self,
-                                                                 s)
-    }
-    #[inline]
-    pub unsafe fn setMutedErrors(&mut self, mute: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions14setMutedErrorsEb(&mut *self, mute)
-    }
-    #[inline]
-    pub unsafe fn setVersion(&mut self, v: JSVersion) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions10setVersionE9JSVersion(&mut *self, v)
-    }
-    #[inline]
-    pub unsafe fn setUTF8(&mut self, u: bool) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions7setUTF8Eb(&mut *self, u)
-    }
-    #[inline]
-    pub unsafe fn setColumn(&mut self, c: u32) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions9setColumnEj(&mut *self, c)
-    }
-    #[inline]
-    pub unsafe fn setCompileAndGo(&mut self, cng: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions15setCompileAndGoEb(&mut *self, cng)
-    }
-    #[inline]
-    pub unsafe fn setHasPollutedScope(&mut self, p: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions19setHasPollutedScopeEb(&mut *self, p)
-    }
-    #[inline]
-    pub unsafe fn setForEval(&mut self, eval: bool) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions10setForEvalEb(&mut *self, eval)
-    }
-    #[inline]
-    pub unsafe fn setNoScriptRval(&mut self, nsr: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions15setNoScriptRvalEb(&mut *self, nsr)
-    }
-    #[inline]
-    pub unsafe fn setSelfHostingMode(&mut self, shm: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions18setSelfHostingModeEb(&mut *self, shm)
-    }
-    #[inline]
-    pub unsafe fn setCanLazilyParse(&mut self, clp: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions17setCanLazilyParseEb(&mut *self, clp)
-    }
-    #[inline]
-    pub unsafe fn setSourceIsLazy(&mut self, l: bool) -> *mut CompileOptions {
-        _ZN2JS14CompileOptions15setSourceIsLazyEb(&mut *self, l)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionType(&mut self, t: *const ::libc::c_char)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions19setIntroductionTypeEPKc(&mut *self, t)
-    }
-    #[inline]
-    pub unsafe fn setIntroductionInfo(&mut self,
-                                      introducerFn: *const ::libc::c_char,
-                                      intro: *const ::libc::c_char, line: u32,
-                                      script: *mut JSScript, offset: u32)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions19setIntroductionInfoEPKcS2_jP8JSScriptj(&mut *self,
-                                                                       introducerFn,
-                                                                       intro,
-                                                                       line,
-                                                                       script,
-                                                                       offset)
-    }
-    #[inline]
-    pub unsafe fn maybeMakeStrictMode(&mut self, strict: bool)
-     -> *mut CompileOptions {
-        _ZN2JS14CompileOptions19maybeMakeStrictModeEb(&mut *self, strict)
-    }
 }
 #[repr(C)]
 pub struct AutoSetAsyncStackForNewCalls {
@@ -2923,16 +1938,10 @@ pub struct AutoSaveExceptionState {
     pub exceptionValue: RootedValue,
 }
 extern "C" {
-    fn _ZN2JS22AutoSaveExceptionState4dropEv(this:
-                                                 *mut AutoSaveExceptionState);
     fn _ZN2JS22AutoSaveExceptionState7restoreEv(this:
                                                     *mut AutoSaveExceptionState);
 }
 impl AutoSaveExceptionState {
-    #[inline]
-    pub unsafe fn drop(&mut self) {
-        _ZN2JS22AutoSaveExceptionState4dropEv(&mut *self)
-    }
     #[inline]
     pub unsafe fn restore(&mut self) {
         _ZN2JS22AutoSaveExceptionState7restoreEv(&mut *self)
@@ -3054,18 +2063,6 @@ extern "C" {
                                                                     done:
                                                                         *mut bool)
      -> bool;
-    fn _ZNK2JS13ForOfIterator15valueIsIterableEv(this: *mut ForOfIterator)
-     -> bool;
-    fn _ZN2JS13ForOfIterator22nextFromOptimizedArrayENS_13MutableHandleINS_5ValueEEEPb(this:
-                                                                                           *mut ForOfIterator,
-                                                                                       val:
-                                                                                           MutableHandleValue,
-                                                                                       done:
-                                                                                           *mut bool)
-     -> bool;
-    fn _ZN2JS13ForOfIterator24materializeArrayIteratorEv(this:
-                                                             *mut ForOfIterator)
-     -> bool;
 }
 impl ForOfIterator {
     #[inline]
@@ -3087,21 +2084,6 @@ impl ForOfIterator {
         _ZN2JS13ForOfIterator4nextENS_13MutableHandleINS_5ValueEEEPb(&mut *self,
                                                                      val,
                                                                      done)
-    }
-    #[inline]
-    pub unsafe fn valueIsIterable(&mut self) -> bool {
-        _ZNK2JS13ForOfIterator15valueIsIterableEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn nextFromOptimizedArray(&mut self, val: MutableHandleValue,
-                                         done: *mut bool) -> bool {
-        _ZN2JS13ForOfIterator22nextFromOptimizedArrayENS_13MutableHandleINS_5ValueEEEPb(&mut *self,
-                                                                                        val,
-                                                                                        done)
-    }
-    #[inline]
-    pub unsafe fn materializeArrayIterator(&mut self) -> bool {
-        _ZN2JS13ForOfIterator24materializeArrayIteratorEv(&mut *self)
     }
 }
 pub type LargeAllocationFailureCallback =
@@ -3757,22 +2739,6 @@ extern "C" {
                                                                      exn:
                                                                          HandleValue)
      -> bool;
-    fn _ZN2js11ErrorReport6reportEv(this: *mut ErrorReport)
-     -> *mut JSErrorReport;
-    fn _ZN2js11ErrorReport7messageEv(this: *mut ErrorReport)
-     -> *const ::libc::c_char;
-    fn _ZN2js11ErrorReport31populateUncaughtExceptionReportEP9JSContextz(this:
-                                                                             *mut ErrorReport,
-                                                                         cx:
-                                                                             *mut JSContext, ...)
-     -> bool;
-    fn _ZN2js11ErrorReport33populateUncaughtExceptionReportVAEP9JSContextPc(this:
-                                                                                *mut ErrorReport,
-                                                                            cx:
-                                                                                *mut JSContext,
-                                                                            ap:
-                                                                                va_list)
-     -> bool;
 }
 impl ErrorReport {
     #[inline]
@@ -3780,29 +2746,6 @@ impl ErrorReport {
      -> bool {
         _ZN2js11ErrorReport4initEP9JSContextN2JS6HandleINS3_5ValueEEE(&mut *self,
                                                                       cx, exn)
-    }
-    #[inline]
-    pub unsafe fn report(&mut self) -> *mut JSErrorReport {
-        _ZN2js11ErrorReport6reportEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn message(&mut self) -> *const ::libc::c_char {
-        _ZN2js11ErrorReport7messageEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn populateUncaughtExceptionReport(&mut self,
-                                                  cx: *mut JSContext)
-     -> bool {
-        _ZN2js11ErrorReport31populateUncaughtExceptionReportEP9JSContextz(&mut *self,
-                                                                          cx)
-    }
-    #[inline]
-    pub unsafe fn populateUncaughtExceptionReportVA(&mut self,
-                                                    cx: *mut JSContext,
-                                                    ap: va_list) -> bool {
-        _ZN2js11ErrorReport33populateUncaughtExceptionReportVAEP9JSContextPc(&mut *self,
-                                                                             cx,
-                                                                             ap)
     }
 }
 #[repr(i32)]
@@ -3978,16 +2921,6 @@ pub struct AutoCTypesActivityCallback {
     pub callback: CTypesActivityCallback,
     pub endType: CTypesActivityType,
 }
-extern "C" {
-    fn _ZN2js26AutoCTypesActivityCallback13DoEndCallbackEv(this:
-                                                               *mut AutoCTypesActivityCallback);
-}
-impl AutoCTypesActivityCallback {
-    #[inline]
-    pub unsafe fn DoEndCallback(&mut self) {
-        _ZN2js26AutoCTypesActivityCallback13DoEndCallbackEv(&mut *self)
-    }
-}
 pub type ObjectMetadataCallback =
     ::std::option::Option<unsafe extern "C" fn(cx: *mut JSContext,
                                                pmetadata: *mut *mut JSObject)
@@ -4067,12 +3000,6 @@ pub struct JSAutoStructuredCloneBuffer {
     pub closure_: *mut ::libc::c_void,
 }
 extern "C" {
-    fn _ZNK27JSAutoStructuredCloneBuffer4dataEv(this:
-                                                    *mut JSAutoStructuredCloneBuffer)
-     -> *mut u64;
-    fn _ZNK27JSAutoStructuredCloneBuffer6nbytesEv(this:
-                                                      *mut JSAutoStructuredCloneBuffer)
-     -> size_t;
     fn _ZN27JSAutoStructuredCloneBuffer5clearEv(this:
                                                     *mut JSAutoStructuredCloneBuffer);
     fn _ZN27JSAutoStructuredCloneBuffer4copyEPKyjj(this:
@@ -4127,14 +3054,6 @@ extern "C" {
      -> bool;
 }
 impl JSAutoStructuredCloneBuffer {
-    #[inline]
-    pub unsafe fn data(&mut self) -> *mut u64 {
-        _ZNK27JSAutoStructuredCloneBuffer4dataEv(&mut *self)
-    }
-    #[inline]
-    pub unsafe fn nbytes(&mut self) -> size_t {
-        _ZNK27JSAutoStructuredCloneBuffer6nbytesEv(&mut *self)
-    }
     #[inline]
     pub unsafe fn clear(&mut self) {
         _ZN27JSAutoStructuredCloneBuffer5clearEv(&mut *self)
