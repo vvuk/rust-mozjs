@@ -29,6 +29,11 @@ mod jsapi_linux_64;
 #[cfg(target_pointer_width = "64")]
 mod jsapi_macos_64;
 
+#[cfg(target_os = "windows")]
+#[cfg(target_pointer_width = "64")]
+mod jsapi_windows_gcc_64;
+
+#[cfg(not(target_os = "windows"))]
 #[cfg(target_pointer_width = "32")]
 mod jsapi_linux_32;
 
@@ -41,6 +46,11 @@ pub mod jsapi {
     #[cfg(target_pointer_width = "64")]
     pub use jsapi_macos_64::*;
 
+    #[cfg(target_os = "windows")]
+    #[cfg(target_pointer_width = "64")]
+    pub use jsapi_windows_gcc_64::*;
+
+    #[cfg(not(target_os = "windows"))]
     #[cfg(target_pointer_width = "32")]
     pub use jsapi_linux_32::*;
 }
@@ -114,22 +124,6 @@ extern { }
 
 #[cfg(target_os = "android")]
 #[link(name = "gcc")]
-extern { }
-
-// On Windows, we need mozjs to show up after jsglue in the
-// link line for proper symbol resolution.
-#[cfg(target_os = "windows")]
-#[link(name = "mozjs")]
-extern { }
-
-// This assumes that windows is using system NSPR with mingw64,
-// and so we need -lplc4.dll to link with the libplc4.dll.a import
-// library.  This would need to be different with a native MSVC
-// build.
-#[cfg(target_os = "windows")]
-#[link(name = "plc4.dll")]
-#[link(name = "plds4.dll")]
-#[link(name = "nspr4.dll")]
 extern { }
 
 #[inline(always)]
