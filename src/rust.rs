@@ -152,6 +152,8 @@ impl Runtime {
             let js_context = JS_GetContext(js_runtime);
             assert!(!js_context.is_null());
 
+            InitSelfHostedCode(js_context);
+
             let runtimeopts = RuntimeOptionsRef(js_runtime);
             (*runtimeopts).set_baseline_(true);
             (*runtimeopts).set_ion_(true);
