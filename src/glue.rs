@@ -48,7 +48,8 @@ pub struct ProxyTraps {
                                                           (cx: *mut JSContext,
                                                            proxy: HandleObject,
                                                            isOrdinary: *mut bool,
-                                                           protop: MutableHandleObject)>,
+                                                           protop: MutableHandleObject)
+                                                          -> bool>,
     pub preventExtensions: ::std::option::Option<unsafe extern "C" fn
                                                      (cx: *mut JSContext,
                                                       proxy: HandleObject,
